@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.baizhi.mapper.BannerMapper">
+    <!--分页查询-->
+    <select id="queryPage" resultType="Banner">
+      select  * from banner limit #{start},#{rows}
+    </select>
+    <!--查询总条数-->
+    <select id="count" resultType="java.lang.Integer">
+        select count(id) from banner
+    </select>
+    <!--添加数据-->
+    <insert id="addBanner">
+         insert into banner values (#{id},#{path},#{title},#{status},#{desc},#{createDate})
+    </insert>
+    <!--修改路径-->
+    <update id="updatePath">
+         update banner set path = #{path} where id = #{id}
+    </update>
+    <!--修改数据-->
+    <update id="update">
+        update banner set title=#{title},status=#{status},`desc`=#{desc} where id =#{id}
+    </update>
+    <!--批量删除-->
+    <delete id="deleteBanner">
+        delete from banner where id in
+        <foreach collection="array" open="(" close=")" separator="," item="id">
+            #{id}
+        </foreach>
+    </delete>
+    <!--查询所有-->
+    <select id="queryAll"  resultType="Banner">
+        select  * from banner
+    </select>
+</mapper>

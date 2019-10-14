@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.baizhi.mapper.AlbumMapper">
+    <!--分页查询-->
+    <select id="queryPage" resultType="Album">
+       select  * from album limit #{start},#{rows}
+    </select>
+    <!--查询总条数-->
+    <select id="count" resultType="java.lang.Integer">
+    select count(id) from album
+    </select>
+    <!--添加数据-->
+    <insert id="addAlbum">
+         insert into album values (#{id},#{title},#{cover},#{score},#{author},#{beam},#{count},#{publishDate},#{content})
+    </insert>
+    <!--修改路徑-->
+    <update id="updatePath">
+         update album set cover = #{path} where id = #{id}
+    </update>
+    <!--修改数据-->
+    <update id="update">
+        update album set title=#{title},author=#{author},beam=#{beam},count=#{count},content=#{content} where id = #{id}
+    </update>
+    <!--批量删除-->
+    <delete id="deleteAlbum">
+        delete from album where id in
+        <foreach collection="array" open="(" close=")" separator="," item="id">
+            #{id}
+        </foreach>
+    </delete>
+    <!--修改数量-->
+    <update id="updateCount">
+        update album set count=#{count}  where id = #{id}
+    </update>
+</mapper>
