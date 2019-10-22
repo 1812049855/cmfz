@@ -2,7 +2,19 @@ package com.baizhi.service;
 
 import com.baizhi.entity.Article;
 import com.baizhi.mapper.ArticleMapper;
+import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.SearchHit;
+import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
+import org.elasticsearch.search.fetch.subphase.highlight.HighlightField;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
+import org.springframework.data.elasticsearch.core.SearchResultMapper;
+import org.springframework.data.elasticsearch.core.aggregation.AggregatedPage;
+import org.springframework.data.elasticsearch.core.aggregation.impl.AggregatedPageImpl;
+import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
+import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +26,8 @@ import java.util.*;
 public class ArticleServiceImpl implements ArticleService {
     @Autowired
     ArticleMapper articleMapper;
+    @Autowired
+    private ElasticsearchTemplate elasticsearchTemplate;
 
     //分页
     @Transactional(propagation = Propagation.SUPPORTS)
@@ -44,5 +58,49 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public void save(Article article) {
         articleMapper.save(article);
+    }
+
+    @Override
+    public List<Article> queryByEs(String val) {
+        HighlightBuilder.Field field = new HighlightBuilder.Field("*");
+        field.preTags("<span style = 'color:red'>");
+        field.postTags("/<span>");
+        NativeSearchQuery build = new NativeSearchQueryBuilder()
+                .withIndices("cmfz")
+                .withTypes("article")
+                .withQuery(QueryBuilders.queryStringQuery(val).analyzer("ik_max_word"))
+                .withHighlightFields(field)
+                .build();
+        AggregatedPage<Article> articles = elasticsearchTemplate.queryForPage(build, Article.class, new SearchResultMapper() {
+            @Override
+            public <T> AggregatedPage<T> mapResults(SearchResponse searchResponse, Class<T> aClass, Pageable pageable) {
+                List<Article> list = new ArrayList<Article>();
+
+                SearchHit[] hits = searchResponse.getHits().getHits();
+                for (SearchHit hit : hits) {
+                    Article article = new Article();
+                    article.setAuthor(hit.getSourceAsMap().get("author").toString());
+                    article.setStatus(hit.getSourceAsMap().get("status").toString());
+                    article.setCreateDate(new Date());
+                    article.setContent(hit.getSourceAsMap().get("content").toString());
+                    article.setTitle(hit.getSourceAsMap().get("title").toString());
+                    Map<String, HighlightField> highlightFields = hit.getHighlightFields();
+                    if (highlightFields.get("title") != null) {
+                        String title = highlightFields.get("title").getFragments()[0].toString();
+                        article.setTitle(title);
+                    }
+                    if (highlightFields.get("content") != null) {
+                        String content = highlightFields.get("content").getFragments()[0].toString();
+                        article.setContent(content);
+                    }
+                    list.add(article);
+                }
+
+                return new AggregatedPageImpl<T>((List<T>) list);
+            }
+        });
+
+
+        return  articles.getContent();
     }
 }

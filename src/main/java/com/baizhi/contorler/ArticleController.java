@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -47,4 +48,15 @@ public class ArticleController {
         article.setCreateDate(new Date());
         articleService.update(article);
     }
+    @RequestMapping("es")
+    @ResponseBody
+    public List<Article> queryByes(String esvalue){
+        System.out.println(esvalue+"========");
+        List<Article> articles = articleService.queryByEs(esvalue);
+        for (Article article : articles) {
+            System.out.println(article+"===========================================");
+        }
+        return articles;
+    }
+
 }

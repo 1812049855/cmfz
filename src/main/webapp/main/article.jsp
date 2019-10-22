@@ -118,6 +118,14 @@
             }
         })
     }
+    $(function () {
+        $("#basic-addon2").click(function () {
+            var esval = $("#esValue").val();
+            $('#lay-right').load('./es.jsp?esval='+esval)
+        })
+
+
+    })
 </script>
 
 <div>
@@ -126,6 +134,10 @@
     <ul class="nav nav-tabs" role="tablist">
         <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">文章列表</a></li>
         <li role="presentation"><a href="#profile" onclick="showModal()" aria-controls="profile" role="tab" data-toggle="tab">添加文章</a></li>
+        <div class="input-group" style="width: 30%; float: right">
+            <input id="esValue" type="text" class="form-control" placeholder="请输入关键字" aria-describedby="basic-addon2">
+            <span class="input-group-addon" id="basic-addon2"><a>搜索</a></span>
+        </div>
     </ul>
 
 </div>
