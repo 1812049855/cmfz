@@ -75,11 +75,7 @@
       <artifactId>jstl</artifactId>
       <version>1.2</version>
     </dependency>
-    <dependency>
-      <groupId>com.baizhi</groupId>
-      <artifactId>code</artifactId>
-      <version>5.0</version>
-    </dependency>
+
       <dependency>
           <groupId>org</groupId>
           <artifactId>jaudiotagger</artifactId>
@@ -103,6 +99,12 @@
       <version>3.2.0</version>
     </dependency>
     <dependency>
+      <groupId>com.baizhi</groupId>
+      <artifactId>code</artifactId>
+      <version>5.0</version>
+    </dependency>
+
+    <dependency>
       <groupId>cn.afterturn</groupId>
       <artifactId>easypoi-web</artifactId>
       <version>3.2.0</version>
@@ -112,13 +114,6 @@
       <artifactId>easypoi-annotation</artifactId>
       <version>3.2.0</version>
     </dependency>
-
-    <dependency>
-      <groupId>io.goeasy</groupId>
-      <artifactId>goeasy-sdk</artifactId>
-      <version>0.3.8</version>
-    </dependency>
-
 
 
     <dependency>

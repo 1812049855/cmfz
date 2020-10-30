@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bishe.mapper.UserMapper">
+    <!--查询所有地图-->
+    <select id="queryAll" resultType="com.bishe.entity.UserMap">
+       SELECT
+        `user`.province AS `name`,
+        Count(`user`.province) AS `value`
+        from `user`
+        GROUP BY
+        `user`.province
+    </select>
+
+    <!--折线图-->
+    <select id="query" resultType="java.lang.Integer">
+        select ifnull(b.count,0)as count
+            from (
+                SELECT curdate() as click_date
+                union all
+                SELECT date_sub(curdate(), interval 1 day) as click_date
+                union all
+                SELECT date_sub(curdate(), interval 2 day) as click_date
+                union all
+                SELECT date_sub(curdate(), interval 3 day) as click_date
+                union all
+                SELECT date_sub(curdate(), interval 4 day) as click_date
+                union all
+                SELECT date_sub(curdate(), interval 5 day) as click_date
+                union all
+                SELECT date_sub(curdate(), interval 6 day) as click_date
+            ) a left join (
+              select createDate, count(*)as count
+              from `user`
+              group by createDate
+            ) b on a.click_date = b.createDate;
+    </select>
+</mapper>
