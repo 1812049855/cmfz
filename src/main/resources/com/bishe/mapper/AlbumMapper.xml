@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.bishe.mapper.AlbumMapper">
     <!--分页查询-->
-    <select id="queryPage" resultType="Album">
+    <select id="queryPage" resultType="com.bishe.entity.Album">
        select  * from album limit #{start},#{rows}
     </select>
     <!--查询总条数-->

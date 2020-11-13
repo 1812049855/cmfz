@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.bishe.mapper.BannerMapper">
     <!--分页查询-->
-    <select id="queryPage" resultType="Banner">
+    <select id="queryPage" resultType="com.bishe.entity.Banner">
       select  * from banner limit #{start},#{rows}
     </select>
     <!--查询总条数-->
@@ -29,7 +29,7 @@
         </foreach>
     </delete>
     <!--查询所有-->
-    <select id="queryAll"  resultType="Banner">
+    <select id="queryAll"  resultType="com.bishe.entity.Banner">
         select  * from banner
     </select>
 </mapper>
